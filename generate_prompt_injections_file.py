@@ -514,7 +514,7 @@ def generate_injection_prompts_data():
         df["source"].append(prompt.source)
         df["language"].append(prompt.language)
     df = pd.DataFrame(df)
-    df.to_csv("injection_prompts_data.csv", index=False)
+    df.to_csv("prompt_injections.csv", index=True, index_label="index" )
 
 
 def generate_giskard_meta_data():
@@ -545,7 +545,7 @@ def generate_giskard_meta_data():
             else:
                 meta_df[k].append(getattr(prompt.evaluation_method, k))
     meta_df = pd.DataFrame(meta_df)
-    meta_df.to_csv("giskard_meta_data.csv", index=False)
+    meta_df.to_csv("giskard_meta_data.csv", index=True, index_label="index")
 
 
 if __name__ == "__main__":
