@@ -32,10 +32,19 @@ def check_group_deviation_description(df, group):
             "There must be only one group description deviation per group."
         )
     return group_deviation_description[0]
+
+def check_uniqueness(df):
+    if df.prompt.nunique() != len(df):
+        dup = df[df.prompt.duplicated(keep=False)]
+        indices = dup.groupby(list(dup)).apply(lambda x: tuple(x.index)).tolist()
+        raise ValueError(
+            f"{len(df) - df.prompt.nunique()} of the prompts are duplicated! These are the rows: {indices}"
+        )
     
 if __name__ == "__main__":
     prompt_injections_df = pd.read_csv(INJECTION_DATA_PATH, index_col=["index"])
     meta_df = pd.read_csv(GISKARD_META_PATH, index_col=["index"])
+    check_uniqueness(prompt_injections_df)
     check_matching_dfs_len(meta_df, prompt_injections_df)
     check_meta_df_requirements(meta_df)
     for group in meta_df.group_mapping.unique().tolist():
